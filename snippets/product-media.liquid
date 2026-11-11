@@ -274,7 +274,11 @@
         {% else %}
               <div  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="product-single__photo product-single__video product__photo-container product__photo-container-{{ section.id }} " 
                 id="ProductPhoto{{ section.id }}"
+<<<<<<< HEAD
                 style="max-width: {% render 'image-width' with image, image: image, width: 480 %}px;"
+=======
+                style="max-width: {% render 'image-width', image: image, width: 480 %}px;"
+>>>>>>> 0ea2a740ce9bb179560062849013730e659a3349
                 data-image-id="{{ image.id }}"
                 data-videoid="{{ image.id }}">
                 {{ media | media_tag }}
