@@ -83,15 +83,7 @@
                               {% unless p.last == blank or first_character_in_key == '_' %}
                                 {{ p.first }}:
                                 {% if p.last contains '/uploads/' %}
-                                  <a href="{{ p.last }}">
-{% assign file_type = p.last | split: '.' | last | downcase %}
-{% assign file_types = 'jpg,jpeg,webp,gif,png,apng,avif,svg,bmp,ico,tiff' | split: ',' %}
-{% if file_types contains file_type %}
-  <div class="bcpo-cart-file"><img src="{{ p.last }}" style="max-width: 50px; height: auto;"></div>
-{% else %}
-  <span class="bcpo-cart-file">Uploaded file</span>
-{% endif %}
-</a>
+                                  <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
                                 {% else %}
                                   {{ p.last }}
                                 {% endif %}
@@ -101,10 +93,10 @@
                           {% endif %}
                           <div>
                             {% if item.original_line_price != item.line_price %}
-                              <small class="cart-item__original-price cart__item-total"><s><span class="bcpo-cart-item-line-price" data-key="{{item.key}}"><span class="bcpo-cart-item-original-price" data-key="{{item.key}}">{{ item.original_price | money }}</span></span></s></small><br>
+                              <small class="cart-item__original-price cart__item-total"><s>{{ item.original_line_price | money }}</s></small><br>
                             {% endif %}
                             <span class="cart__item-total text-body">
-                              <span class="bcpo-cart-item-line-price" data-key="{{item.key}}">{{ item.price | money }}</span>
+                              {{ item.line_price | money }}
                             </span>
                             {% for discount in item.discounts %}
                               <p class="cart-item__discount cart__item-total">{{ discount.title }}</p>
@@ -156,10 +148,10 @@
                     </td>
                     <td class="cart__cell--total d-none d-lg-table-cell">
                       {% if item.original_line_price != item.line_price %}
-                        <small class="cart-item__original-price cart__item-total"><s><span class="bcpo-cart-item-line-price" data-key="{{item.key}}"><span class="bcpo-cart-item-original-price" data-key="{{item.key}}">{{ item.original_price | money }}</span></span></s></small><br>
+                        <small class="cart-item__original-price cart__item-total"><s>{{ item.original_line_price | money }}</s></small><br>
                       {% endif %}
                       <span class="cart__item-total text-body">
-                        <span class="bcpo-cart-item-line-price" data-key="{{item.key}}">{{ item.price | money }}</span>
+                        {{ item.line_price | money }}
                       </span>
                       {% for discount in item.discounts %}
                         <p class="cart-item__discount cart__item-total">{{ discount.title }}</p>
@@ -250,7 +242,7 @@
               <div class="col text-left">
                 <div class="flex align-items-center mt-2">
                  <span class="mr-auto">{{ 'cart.general.total' | t }}</span>
-                  <p class="h4 cart__subtotal text-body mt-0" id="CartSubtotal"><span class="bcpo-cart-original-total">{{ cart.total_price | money }}</span></p>
+                  <p class="h4 cart__subtotal text-body mt-0" id="CartSubtotal">{{ cart.total_price | money }}</p>
                 </div>
                 
                 <p id="cartDiscountTotal txt-body-70">
@@ -424,5 +416,3 @@
   ]
 }
 {% endschema %}
-
-<!-- bcpo done -->

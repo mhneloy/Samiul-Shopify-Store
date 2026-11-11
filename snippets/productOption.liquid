@@ -11,11 +11,16 @@
 {%- endif -%}
 <fieldset class="single-option-radio {% if isColor %} single-color {{ size_color }} {% if color_circle %}roud-color{% endif %} {% endif %} "
           name="{{ option.name | handleize }}"
-          id="ProductSelect-option-{{ forloop.index0 }}"
-          data-out-of-stock-behavior="{{ out_of_stock_behavior }}">
+          id="ProductSelect-option-{{ forloop.index0 }}">
   
   {%- for value in option.values -%}
     {%- liquid
+      assign variant_label_state = true 
+      if product.options.size == 1 
+        unless product.variants[forloop.index0].available 
+        assign variant_label_state = false 
+        endunless 
+      endif 
       for variant in product.variants
         assign vOption = 'option' | append: option_index 
         if value == variant[vOption] 
@@ -31,19 +36,20 @@
 
   <input type="radio"
         {% if option.selected_value == value -%} checked="checked"{%- endif %}
+        
          value="{{ value | escape }}"
          data-index="option{{ option_index }}"
          name="{{ option.name | handleize }}"
-         class="single-option-selector-{{ section.id }} single-option-selector__radio"
+         class="single-option-selector-{{ section.id }} single-option-selector__radio {% unless variant_label_state %} disabled {% endunless %}"
          id="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}">
-    <label {% if hasImage %} title="{{ value | escape }}"
+    <label {% if hasImage %} title="{{ value | escape }}" 
     {%- if sw_color_product -%} 
     class="st-color-{{ value | escape | handle }}"
     style="background-color:{{ value | escape | handle }};"
     {% else %} 
     style="background-image:url({{ currenVariant.image.src | image_url: width: 100 }})" 
     {% endif %}{% endif %}
-          for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}">
+          for="ProductSelect-option-{{ option.name | handleize }}-{{ value | escape }}"{% unless variant_label_state %} class="disabled"{% endunless %}>
       {%- unless hasImage -%}{{ value | escape }}{%- endunless -%}
     </label>
   {%- endfor -%}
@@ -52,8 +58,7 @@
 <select class="single-option-selector single-option-selector-{{ section.id }} product-form__input"
         id="SingleOptionSelector-{{ firstloop }}"
         data-name="{{ option.name }}"
-        data-index="option{{ loop }}"
-        data-out-of-stock-behavior="{{ out_of_stock_behavior }}">
+        data-index="option{{ loop }}">
   {%- for value in option.values -%}
   <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
   {%- endfor -%}
